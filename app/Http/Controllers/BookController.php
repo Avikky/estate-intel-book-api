@@ -40,6 +40,7 @@ class BookController extends Controller
             'release_date' => 'required|date',
         ]);
 
+
         $book =  Book::create([
             'name' => $fields['name'],
             'isbn' => $fields['isbn'],
@@ -108,33 +109,24 @@ class BookController extends Controller
                 'publisher' => 'required|string',
                 'release_date' => 'required|date',
             ]);
-            
-            // if(is_array($fields['authors'])){
-            //     return array($fields['authors']);
-            // }else{
-            //     return $fields['authors'];
-            // }
-        // is_array($fields['authors']) ? $arth = serialize($fields['authors']) : $arth = serialize($fields['authors']);
 
-        // dd(unserialize($arth));
-
-            $update = $book->updat
+            $update = $book->update([
                 'name' => $fields['name'],
                 'isbn' => $fields['isbn'],
-                'authors' => is_array($fields['authors']) ? serialize($fields['authors']) : serialize($fields['authors']),
+                'authors' => is_array($fields['authors']) ? serialize($fields['authors']) : serialize([$fields['authors']]),
                 'country' => $fields['country'],
                 'number_of_pages' => $fields['number_of_pages'],
                 'publisher' => $fields['publisher'],
                 'release_date' => $fields['release_date'],
             ]);
-    
+
             if($update){
                 return (new BookResource($book))->additional([
                     'status' => 'success',
                     'status_code' => 201,
                 ]);
             }else{
-                
+
                 return (new BookResource($book))->additional([
                     'status' => 'failed',
                     'status_code' => 500,
@@ -159,12 +151,54 @@ class BookController extends Controller
     public function destroy($id)
     {
         $book = Book::find($id);
-        if($book){
-           if($book->destroy($id)){
-                
-           }
-        }else {
-            
+        if($book->destroy($id)){
+            return (new BookResource($book))->additional([
+                'status' => 'success',
+                'status_code' => 204,
+                'message' => 'The book '. $book->name. ' was deleted successfully'
+            ]);
         }
+    }
+
+    public function search(Request $request){
+
+        if($request->name){
+            $request->validate([
+                'name' => 'string',
+            ]);
+            $query = Book::where('name','LIKE', '%'.
+            $request->name. '%')->get();
+        }
+
+        if($request->country){
+            $request->validate([
+                'country' => 'string',
+            ]);
+            $query = Book::where('name','LIKE', '%'.
+            $request->country. '%')->get();
+        }
+
+        if($request->publisher){
+            $request->validate([
+                'publisher' => 'string',
+            ]);
+            $query = Book::where('publisher','LIKE', '%'.
+            $request->country. '%')->get();
+        }
+
+        if($request->release_date){
+            $request->validate([
+                'release_date' => 'integer',
+            ]);
+
+            $query = Book::where('publisher','LIKE', '%'.
+            $request->release_date. '%')->get();
+        }
+
+        return BookResource::collection($query)->additional([
+            'status' => 'success',
+            'status_code' => 200,
+        ]);
+
     }
 }
