@@ -1,62 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+## Estate Intel Book API Assesment
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+This is a short coding assignment, which implement a REST API that calls an external API service to get information about a book as well as Create, Read, Update, Delete books locally.
 
-## Learning Laravel
+## Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Ensure you have php installed on your machine or you are using Xampp Appache server which comes with PHP by default
+- Ensure you have composer installed on your machine aswell (composer in a php dependency manager just like npm in Node )
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Clone the repository `git clone <repo-url>`
 
-## Laravel Sponsors
+After cloning, 
+    
+    cd estate-intel-book-api
+    
+After that 
+    run this command to install all dependencies `composer install` 
+    
+## Setup 
+We need to setup up a database but for us to do that we have to create a `.env` file.
+Git ignores this file when files are pushed to github, so to create it 
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+run this comman in your terminal `cp .env.example .env`
 
-### Premium Partners
+This command will create a .env file and copy the content of .env.example to it.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+**Alternatively**
 
-## Contributing
+You can manually create a `.env` file in the root directory and copy the content of `.env.example` into it.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Create database
+In this project I am used SQLITE therefore we are going to setup a sqlite database 
+Open `.env file` that you just created and locate the `DB_CONNECTION` section of the code
 
-## Code of Conduct
+edit the code as stated below or your can copy and replace
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    DB_CONNECTION=sqlite
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
 
-## Security Vulnerabilities
+    
+#### Now lets create the database file 
+open your terminal make make sure you are inside the application root directory/folder
+then run `touch database/database.sqlite` this command will create a `database.sqlite file` inside the database directory/folder.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+once that is done 
 
-## License
+run `php artisan migrate` to migrate your database.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Alternatively**
+
+If the `touch command` didn't work for you, you can manually create a `database.sqlite` file in the database root folder.
+you can then run your migrations.
+
+After the migration, the application is good to go, all you have to do is run `php artisan serve` to start up you local server and test out the API using postman or any API testing tool.
+
+
+## Valid API endpoints
+
+    Getting External books by name
+    GET /api/books/name?=:nameOfBook  (:nameOFbook represents that name of book varies)
+
+    Search Local books by name or publisher or country or release_date
+    GET /api/books/search?name=:nameOfBook (:nameOFbook represents that name of book can varies)
+    OR
+    GET /api/books/search?publisher=:publisher (:publisher represents that publisher value can varies)
+    OR 
+    GET /api/books/search?publisher=:country  (:country represents that country value can varies)
+    OR
+    GET /api/books/search?publisher=:release_date  (:release_date represents that release_date value can varies)
+
+
+    Gets all locally created books from the local database
+    GET /api/books
+
+    Returns a Single book
+    GET /api/books/:id
+
+    Create a new book
+    POST /api/books
+
+    Updates a particaular book
+    PUT /api/books/:id
+
+    Delete a particular book
+    DELETE /api/books/:id
+
