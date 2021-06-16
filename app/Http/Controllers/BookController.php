@@ -19,7 +19,7 @@ class BookController extends Controller
         return BookResource::collection($books)->additional([
             'status' => 'success',
             'status_code' => 200,
-        ]);
+        ])->response(200);
     }
 
     /**
@@ -191,7 +191,7 @@ class BookController extends Controller
                 'release_date' => 'integer',
             ]);
 
-            $query = Book::where('publisher','LIKE', '%'.
+            $query = Book::where('release_date','LIKE', '%'.
             $request->release_date. '%')->get();
         }
 

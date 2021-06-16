@@ -15,7 +15,7 @@ class ExternalBookControllerTests extends TestCase
      */
     public function test_example()
     {
-        $response = $this->get('/');
+        $response = $this->get('api/v1/external-books');
 
         $response->assertStatus(200);
     }
